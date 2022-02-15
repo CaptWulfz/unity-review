@@ -1,47 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D rb;
+    [SerializeField] private float m_Speed = 5.0f;
+    [SerializeField] private float m_Jump_Speed = 10.0f;
+    [SerializeField] Rigidbody2D playerRigidbody;
 
-    private const float SPEED = 5f;
+    Controls controls;
 
-    private Controls controls;
-
-    private void Start()
+    void Start()
     {
-        this.controls = InputManager.Instance.GetControls();
+        this.controls = new Controls();
         this.controls.Player.Enable();
-        //Comment out if you'll use MoveByRB
-        //this.controls.Player.Move.Disable();
+
+        playerRigidbody.freezeRotation = true;
+        //playerRigidbody = this.GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    void Update()
     {
-        MoveByRB();
+        PlayerMovementbyRigidbody();
+
+        if (this.controls.Player.Jump.WasPressedThisFrame())
+            playerRigidbody.velocity = Vector2.up * m_Speed * m_Jump_Speed;
     }
 
-    private void MoveByTransform()
+    void PlayerMovementbyRigidbody()
+    {
+        Vector2 movement = controls.Player.Movement.ReadValue<Vector2>();
+        playerRigidbody.velocity = movement * m_Speed;
+    }
+
+    void PlayerMovementbyTransform()
     {
         Vector2 move = this.transform.position;
 
-        if (this.controls.Player.MoveUp.IsPressed())
-            move = this.transform.position = new Vector2(this.transform.position.x, this.transform.position.y + SPEED * Time.deltaTime);
-        else if (this.controls.Player.MoveDown.IsPressed())
-            move = this.transform.position = new Vector2(this.transform.position.x, this.transform.position.y - SPEED * Time.deltaTime);
-        else if (this.controls.Player.MoveLeft.IsPressed())
-            move = this.transform.position = new Vector2(this.transform.position.x - SPEED * Time.deltaTime, this.transform.position.y);
-        else if (this.controls.Player.MoveRight.IsPressed())
-            move = this.transform.position = new Vector2(this.transform.position.x + SPEED * Time.deltaTime, this.transform.position.y);
+        if (Keyboard.current.dKey.isPressed)
+            move = new Vector2(this.transform.position.x + m_Speed * Time.deltaTime, this.transform.position.y);
+        if (Keyboard.current.aKey.isPressed)
+            move = new Vector2(this.transform.position.x - m_Speed * Time.deltaTime, this.transform.position.y);
+        if (Keyboard.current.wKey.isPressed)
+            move = new Vector2(this.transform.position.x, this.transform.position.y + m_Speed * Time.deltaTime);
+        if (Keyboard.current.sKey.isPressed)
+            move = new Vector2(this.transform.position.x, this.transform.position.y - m_Speed * Time.deltaTime);
 
         this.transform.position = move;
-    }
-
-    private void MoveByRB()
-    {
-        Vector2 move = this.controls.Player.Move.ReadValue<Vector2>();
-        rb.velocity = move * 5f;
     }
 }
