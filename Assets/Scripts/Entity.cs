@@ -6,10 +6,15 @@ using UnityEngine.InputSystem;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D rb;
-    protected float speed = 5f;
-    Controls controls;
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected AudioSource source;
 
+
+    protected string sourceName = "";
+    protected float speed = 5f;
+    
+    
+    Controls controls;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -22,7 +27,7 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        MoveByRigidBody();
+        //MoveByRigidBody();
     }
 
     protected void MoveByRigidBody()
