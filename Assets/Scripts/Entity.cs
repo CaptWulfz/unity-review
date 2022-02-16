@@ -5,8 +5,10 @@ using UnityEngine.InputSystem;
 
 public class Entity : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D rb;
+    [SerializeField] protected Rigidbody2D rb;
+    [SerializeField] protected AudioSource source;
 
+    protected string sourceName = "";
     protected float speed = 5f;
 
     Controls controls;
@@ -15,13 +17,13 @@ public class Entity : MonoBehaviour
     protected virtual void Start()
     {
         this.controls = new Controls();
-        this.controls.Player.Enable();
+        //this.controls.Player.Enable();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        MoveByRigidBody();
+        //MoveByRigidBody();
     }
 
     protected void MoveByRigidBody()

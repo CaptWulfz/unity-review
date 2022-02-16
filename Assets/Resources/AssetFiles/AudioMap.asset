@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db2a939890abd846bfdd905c3897b18, type: 3}
+  m_Name: AudioMap
+  m_EditorClassIdentifier: 
+  SFX:
+  - key: dbz
+    source: {fileID: 8300000, guid: c4d4b4572d1545747a52723a9fc53237, type: 3}
+  - key: nani
+    source: {fileID: 8300000, guid: 011cc5879334f53438ba903fa05f6cc3, type: 3}
+  - key: tom
+    source: {fileID: 8300000, guid: 922586bb0450ee14783f2eb05ce5414b, type: 3}
+  - key: ultra
+    source: {fileID: 8300000, guid: c843c0463f7ed1d4bacad8a2f6b7f9ec, type: 3}
+  Music:
+  - key: chill
+    source: {fileID: 8300000, guid: 4920bfe452bdb2e489a98188ea362197, type: 3}
