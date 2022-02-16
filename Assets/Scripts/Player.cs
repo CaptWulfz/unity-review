@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,32 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_Jump_Speed = 10.0f;
     [SerializeField] Rigidbody2D playerRigidbody;
 
+    [SerializeField] AudioSource audioSource;
+
     Controls controls;
+
+    string sourceid;
+    string sourceName;
+
+    private void OnEnable()
+    {
+        AudioManager.Instance.RegisterAudioSource(AudioKeys.SFX, this.sourceName, this.audioSource);
+        AudioManager.Instance.RegisterAudioSource(AudioKeys.MUSIC, this.sourceName, this.audioSource);
+    }
+    void OnDisable()
+    {
+        AudioManager.Instance.UnregisterAudioSource(AudioKeys.SFX, this.sourceName);
+        AudioManager.Instance.UnregisterAudioSource(AudioKeys.MUSIC, this.sourceName);
+    }
 
     void Start()
     {
+        this.sourceName = "Player Source" + this.gameObject.name;
+        Debug.Log(this.gameObject.name);
+        this.sourceid = sourceName;
+
+        OnEnable();
+
         this.controls = new Controls();
         this.controls.Player.Enable();
 
@@ -22,7 +45,18 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        PlayerMovementbyRigidbody();
+        //PlayerMovementbyRigidbody();
+        if (Keyboard.current.dKey.isPressed)
+            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.YEE);
+
+        if (Keyboard.current.aKey.isPressed)
+            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.SMALLAHH);
+
+        if (Keyboard.current.wKey.isPressed)
+            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.LOUDAHH);
+
+        if (Keyboard.current.sKey.isPressed && this.gameObject.name == "Player2")
+            AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.BGM);
 
         if (this.controls.Player.Jump.WasPressedThisFrame())
             playerRigidbody.velocity = Vector2.up * m_Speed * m_Jump_Speed;
