@@ -2,44 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
-    [SerializeField] private float speed = 5f;
-    [SerializeField] Rigidbody2D playerRigidbody;
-    Controls controls;
 
-    void Start() {
-        this.controls = new Controls();
-        this.controls.Player.Enable();
+    [SerializeField] string sourceId;
+
+    private void OnEnable() {
+        AudioManager.Instance.RegisterAudioToSource(AudioKeys.SFX, this.sourceName, this.source);
+        AudioManager.Instance.RegisterAudioToSource(AudioKeys.MUSIC, this.sourceName, this.source);
+    }
+
+    private void OnDisable() {
+        AudioManager.Instance.UnregisterAudioSource(AudioKeys.SFX, this.sourceName);
+        AudioManager.Instance.UnregisterAudioSource(AudioKeys.MUSIC, this.sourceName);
+    }
+
+    protected override void Start(){
+    
+    this.sourceName = string.Format("PlayerSource@{0}", Guid.NewGuid());
+    this.sourceId = this.sourceName;
+    AudioManager.Instance.RegisterAudioToSource(AudioKeys.SFX, this.sourceName, this.source);
+    AudioManager.Instance.RegisterAudioToSource(AudioKeys.MUSIC, this.sourceName, this.source);
+    this.speed = 10f;
+    base.Start();
     }
     
-    void Update()
+    protected override void Update()
     {
-        MoveByRigidBody();
-    }
-
-    private void MoveByRigidBody(){
-        Vector2 movement = controls.Player.Movement.ReadValue<Vector2>();
-        playerRigidbody.velocity = movement * speed;
-    }
-
-    private void MoveByTransform(){
-        Vector2 move = this.transform.position;
-
-        //Left
         if (Keyboard.current.aKey.isPressed)
-            move = new Vector2(this.transform.position.x - speed * Time.deltaTime, this.transform.position.y);
-        //Right
-        if (Keyboard.current.dKey.isPressed)
-            move = new Vector2(this.transform.position.x + speed * Time.deltaTime, this.transform.position.y);
-        //Up
+        {
+            AudioManager.Instance.PlayAudioOnPlayer(AudioKeys.SFX, SFXKeys.GIB);
+        }
         if (Keyboard.current.wKey.isPressed)
-            move = new Vector2(this.transform.position.x , this.transform.position.y + speed * Time.deltaTime);
-        //Down
-        if (Keyboard.current.sKey.isPressed)
-            move = new Vector2(this.transform.position.x, this.transform.position.y - speed * Time.deltaTime);
-        
-        this.transform.position = move;
+        {
+            AudioManager.Instance.PlayAudioOnPlayer(AudioKeys.SFX, SFXKeys.STOP);
+        }
+        if (Keyboard.current.dKey.isPressed)
+        {
+            AudioManager.Instance.PlayAudioOnPlayer(AudioKeys.MUSIC, MusicKeys.CHILL);
+        }
+        //MoveByRigidBody();
+
+        base.Update();
     }
+   
 }

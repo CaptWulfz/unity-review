@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e1a2439e32905409cdbd117f2de934, type: 3}
+  m_Name: AudioMap
+  m_EditorClassIdentifier: 
+  SFX:
+  - key: gib
+    source: {fileID: 8300000, guid: bcba885cb3ed01547805929362845d2d, type: 3}
+  - key: stop
+    source: {fileID: 8300000, guid: 5935e871789c5894186fe264db45c7c3, type: 3}
+  - key: spray
+    source: {fileID: 8300000, guid: 1005cb77974694b47af7342a478b85ba, type: 3}
+  - key: step1
+    source: {fileID: 8300000, guid: 67d7a445283301b4a8cb6b7eb2d6f5f5, type: 3}
+  - key: step2
+    source: {fileID: 8300000, guid: 08e7995f62cdbac44a20924b07eedc67, type: 3}
+  - key: step3
+    source: {fileID: 8300000, guid: 1b604bd9cb11522469eb003b799947c7, type: 3}
+  - key: step4
+    source: {fileID: 8300000, guid: a84ab77a8a0a40d4cb72f9f786b3b389, type: 3}
+  Music:
+  - key: Sakura Chill
+    source: {fileID: 8300000, guid: 3bb8134a6267a004ca8bf37d9c049472, type: 3}
