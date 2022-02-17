@@ -27,7 +27,7 @@ public class Entity : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        //MoveByRigidBody();
+        MoveByRigidBody();
     }
 
     protected void MoveByRigidBody()

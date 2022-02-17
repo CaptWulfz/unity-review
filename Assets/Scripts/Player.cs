@@ -29,7 +29,7 @@ public class Player : Entity
         this.sourceName = string.Format("Player1Source@{0}", Guid.NewGuid());
         this.sourceId = this.sourceName;
         onEnable();
-        this.speed = 10f;
+        this.speed = 5f;
         base.Start();   
     }
    
@@ -44,21 +44,19 @@ public class Player : Entity
             param.AddParameter<float>("newHealth", this.health);
             param.AddParameter<string>("playerThoughts", "ah shit, here we go again");
             EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.JUMP);
+            Debug.Log("DAMAGE HEALTH");
 
-
+            // DEATH
             if (this.health <= 0f)
             {
                 Parameters param2 = new Parameters();
                 param2.AddParameter<string>("deathText", "You have died!");
                 EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
-
-                //MenuPopup popup = PopupManager.Instance.ShowPopup<MenuPopup>("MenuPopup");
-                //popup.Setup("You have died!");
-                //popup.Show();
+                AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.DOWN);
+                Debug.Log("DEAD");
             }
 
-            //AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.COIN);
-            Debug.Log("DAMAGE HEALTH");
         }
 
         if (Keyboard.current.mKey.isPressed)
@@ -75,8 +73,14 @@ public class Player : Entity
             param.AddParameter<string>("playerThoughts", "Damn, that hit the spot");
             EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
 
-            //AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.CHILL);
+            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.COIN);
             Debug.Log("GOING RIGHT");
+        }
+
+        if (Keyboard.current.mKey.wasReleasedThisFrame)
+        {
+            AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.CHILL);
+            Debug.Log("MUSIC");
         }
 
         base.Update();
