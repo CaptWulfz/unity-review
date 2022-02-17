@@ -7,6 +7,7 @@ public class Startup : MonoBehaviour
     void Awake()
     {
         AudioManager.Instance.Initialize();
+        PopupManager.Instance.Initialize();
     }
 
 }

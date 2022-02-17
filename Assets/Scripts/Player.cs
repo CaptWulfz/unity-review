@@ -8,6 +8,8 @@ public class Player : Entity
 {
     [SerializeField] string sourceId;
 
+    [SerializeField] float health = 100f;
+
     private void OnEnable()
     {
         AudioManager.Instance.RegisterAudioSource(AudioKeys.SFX, this.sourceName, this.source);
@@ -31,9 +33,22 @@ public class Player : Entity
 
     private void Update()
     {
-        if (Keyboard.current.aKey.isPressed)
+        if (Keyboard.current.aKey.wasReleasedThisFrame)
         {
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.TOM);
+            Parameters param = new Parameters();
+            this.health -= 10f;
+            param.AddParameter<float>("newHealthValue", this.health);
+            param.AddParameter<string>("thoughts", "Shit");
+            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+            
+            if (this.health <= 0)
+            {
+                Parameters param2 = new Parameters();
+                param2.AddParameter<string>("deathText", "You have Died!");
+
+                EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
+            }
+            //AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.TOM);
         }
 
         if (Keyboard.current.sKey.isPressed)
@@ -41,9 +56,14 @@ public class Player : Entity
             AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.NANI);
         }
 
-        if (Keyboard.current.dKey.isPressed)
+        if (Keyboard.current.dKey.wasReleasedThisFrame)
         {
-            AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.CHILL);
+            Parameters param = new Parameters();
+            this.health += 10f;
+            param.AddParameter<float>("newHealthValue", this.health);
+            param.AddParameter<string>("thoughts", "I'm alive");
+            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+            //AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.CHILL);
         }
     }
 }
