@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float m_Speed = 5.0f;
     [SerializeField] private float m_Jump_Speed = 10.0f;
     [SerializeField] Rigidbody2D playerRigidbody;
-
+    [SerializeField] float health = 100f;
     [SerializeField] AudioSource audioSource;
 
     Controls controls;
@@ -40,26 +40,52 @@ public class Player : MonoBehaviour
         this.controls.Player.Enable();
 
         playerRigidbody.freezeRotation = true;
-        //playerRigidbody = this.GetComponent<Rigidbody2D>();
+        playerRigidbody = this.GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        //PlayerMovementbyRigidbody();
-        if (Keyboard.current.dKey.isPressed)
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.YEE);
+        PlayerMovementbyRigidbody();
 
-        if (Keyboard.current.aKey.isPressed)
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.SMALLAHH);
+        if (Keyboard.current.aKey.wasPressedThisFrame)
+        {
+            Parameters param = new Parameters();
+            this.health -= 10f;
+            param.AddParameter<float>("newHealthValue", this.health);
+            param.AddParameter<string>("thoughts", "dmgd");
+            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
 
-        if (Keyboard.current.wKey.isPressed)
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.LOUDAHH);
+            if (this.health <= 0)
+            {
+                Parameters param2 = new Parameters();
+                param2.AddParameter<string>("deathText", "Deadd");
+                EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
+            }
+        }
 
-        if (Keyboard.current.sKey.isPressed && this.gameObject.name == "Player2")
-            AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.BGM);
+        if (Keyboard.current.dKey.wasPressedThisFrame)
+        {
+            Parameters param = new Parameters();
+            this.health += 10f;
+            param.AddParameter<float>("newHealthValue", this.health);
+            param.AddParameter<string>("thoughts", "heald");
+            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+        }
 
-        if (this.controls.Player.Jump.WasPressedThisFrame())
-            playerRigidbody.velocity = Vector2.up * m_Speed * m_Jump_Speed;
+        //if (Keyboard.current.dKey.isPressed)
+        //    AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.YEE);
+
+        //if (Keyboard.current.aKey.isPressed)
+        //    AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.SMALLAHH);
+
+        //if (Keyboard.current.wKey.isPressed)
+        //    AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.LOUDAHH);
+
+        //if (Keyboard.current.sKey.isPressed && this.gameObject.name == "Player2")
+        //    AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.BGM);
+
+        //if (this.controls.Player.Jump.WasPressedThisFrame())
+        //    playerRigidbody.velocity = Vector2.up * m_Speed * m_Jump_Speed;
     }
 
     void PlayerMovementbyRigidbody()
