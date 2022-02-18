@@ -16,9 +16,10 @@ public class Popup : MonoBehaviour
     
     public void Hide(){
         this.anim.Play(POPUP_CLOSE);
-        AnimationHandler.WaitForAnimation(this.anim, () =>{
+        StartCoroutine(AnimationHandler.WaitForAnimation(this.anim, () =>{
             PopupManager.Instance.HidePopup(this.gameObject);
-        });
+        }));
+        
     }
 
     public void OnCloseButtonClicked(){
