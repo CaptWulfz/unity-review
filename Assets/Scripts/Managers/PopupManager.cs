@@ -28,4 +28,9 @@ public class PopupManager : Singleton<PopupManager>
 
     }
 
+    public void HidePopup(GameObject popup)
+    {
+        Destroy(popup);
+    }
+
 }

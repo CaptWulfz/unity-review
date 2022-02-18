@@ -32,33 +32,75 @@ public class Player : Entity
         this.speed = 5f;
         base.Start();   
     }
-   
+
+    protected override void MoveByRigidBody()
+    {
+        base.MoveByRigidBody();
+
+        PlatformerMoveAnimation();
+
+        if (this.rb.velocity.x < 0)
+            this.spriteRenderer.flipX = true;
+        else if (this.rb.velocity.x > 0)
+            this.spriteRenderer.flipX = false;
+
+    }
+
+    private void FreeMoveAnimation()
+    {
+        // for free movement up, down, left, right
+        float speedParam = Mathf.Abs(this.rb.velocity.x + this.rb.velocity.y);
+        this.animator.SetFloat("Speed", speedParam);
+    }
+
+    private void PlatformerMoveAnimation()
+    {
+        // for left and right only
+        this.animator.SetFloat("Speed", Mathf.Abs(this.rb.velocity.x));
+    }
+
     private void Update()
     {
+        base.Update();
+    }
 
-        // Centralized Audio Manager
-        if (Keyboard.current.kKey.wasReleasedThisFrame)
+
+    private void DamagePlayer()
+    {
+        // Damage
+        Parameters param = new Parameters();
+        this.health -= 10;
+        param.AddParameter<float>("newHealth", this.health);
+        param.AddParameter<string>("playerThoughts", "ah shit, here we go again");
+        EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+        AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.JUMP);
+        Debug.Log("DAMAGE HEALTH");
+
+        // DEATH
+        if (this.health <= 0f)
         {
-            Parameters param = new Parameters();
-            this.health -= 10;
-            param.AddParameter<float>("newHealth", this.health);
-            param.AddParameter<string>("playerThoughts", "ah shit, here we go again");
-            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.JUMP);
-            Debug.Log("DAMAGE HEALTH");
-
-            // DEATH
-            if (this.health <= 0f)
-            {
-                Parameters param2 = new Parameters();
-                param2.AddParameter<string>("deathText", "You have died!");
-                EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
-                AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.DOWN);
-                Debug.Log("DEAD");
-            }
-
+            Parameters param2 = new Parameters();
+            param2.AddParameter<string>("deathText", "You have died!");
+            EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
+            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.DOWN);
+            Debug.Log("DEAD");
         }
+    }
 
+    private void HealPlayer()
+    {
+        Parameters param = new Parameters();
+        this.health += 10;
+        param.AddParameter<float>("newHealth", this.health);
+        param.AddParameter<string>("playerThoughts", "Damn, that hit the spot");
+        EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+
+        AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.COIN);
+        Debug.Log("GOING RIGHT");
+    }
+
+    private void JumpPlayer()
+    {
         if (Keyboard.current.mKey.isPressed)
         {
             AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.JUMP);
@@ -67,14 +109,7 @@ public class Player : Entity
 
         if (Keyboard.current.lKey.wasReleasedThisFrame)
         {
-            Parameters param = new Parameters();
-            this.health += 10;
-            param.AddParameter<float>("newHealth", this.health);
-            param.AddParameter<string>("playerThoughts", "Damn, that hit the spot");
-            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
 
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.COIN);
-            Debug.Log("GOING RIGHT");
         }
 
         if (Keyboard.current.mKey.wasReleasedThisFrame)
@@ -82,8 +117,6 @@ public class Player : Entity
             AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.CHILL);
             Debug.Log("MUSIC");
         }
-
-        base.Update();
     }
 
 }

@@ -6,9 +6,13 @@ using UnityEngine.InputSystem;
 
 public class Entity : MonoBehaviour
 {
+    [Header("Physics Components")]
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected AudioSource source;
 
+    [Header("Animation Components")]
+    [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected Animator animator;
 
     protected string sourceName = "";
     protected float speed = 5f;
@@ -16,21 +20,17 @@ public class Entity : MonoBehaviour
     
     Controls controls;
 
-    // Start is called before the first frame update
     protected virtual void Start()
     {
-        // "this" is for global variables
         this.controls = new Controls();
         this.controls.Player.Enable();
     }
-
-    // Update is called once per frame
     protected virtual void Update()
     {
         MoveByRigidBody();
     }
 
-    protected void MoveByRigidBody()
+    protected virtual void MoveByRigidBody()
     {
         // Read Value 
         // <> is for type
