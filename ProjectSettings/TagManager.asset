@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - HUDCanvas
+  - PopupCanvas
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3543517781
+    locked: 0
+  - name: Entity
+    uniqueID: 1643258387
+    locked: 0
+  - name: Foreground
+    uniqueID: 2020284709
+    locked: 0
+  - name: UI
+    uniqueID: 3153230079
     locked: 0

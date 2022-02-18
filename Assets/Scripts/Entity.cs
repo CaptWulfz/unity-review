@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
+    
+    [Header("Physics Components")]
     [SerializeField] protected Rigidbody2D playerRigidbody;
     [SerializeField] protected AudioSource source;
-    
-    protected string sourceName;
+
+    [Header("Animation Components")]
+    [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected Animator animator;
     [SerializeField] protected float speed = 5f;
+
+    protected string sourceName = "";
     Controls controls;
 
 
@@ -18,10 +24,10 @@ public class Entity : MonoBehaviour
     }
 
     protected virtual void Update(){
-        //MoveByRigidBody();
+        MoveByRigidBody();
     }
 
-    protected void MoveByRigidBody(){
+    protected virtual void MoveByRigidBody(){
         Vector2 movement = controls.Player.Movement.ReadValue<Vector2>();
         playerRigidbody.velocity = movement * speed;
     }
