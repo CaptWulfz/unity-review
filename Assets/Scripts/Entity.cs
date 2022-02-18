@@ -35,8 +35,17 @@ public class Entity : MonoBehaviour
         // Read Value 
         // <> is for type
         Vector2 move = this.controls.Player.Movement.ReadValue<Vector2>();
-        this.rb.velocity = move * speed;
-        Debug.Log("Moving through" + move);
+        if (move == Vector2.up)
+        {
+            // Jump
+
+        }
+
+        if (move == Vector2.left || move == Vector2.right)
+        {
+            this.rb.velocity = move * speed;
+            Debug.Log("Moving through" + move);
+        }
     }
 
     protected void MoveByTransform()

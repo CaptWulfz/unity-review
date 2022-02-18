@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AnimationHandler : MonoBehaviour
 {
+    
     // Need at least 1 yield return function for every IEnumerator
     public static IEnumerator WaitForAnimation(Animation anim, Action onComplete = null)
     {
