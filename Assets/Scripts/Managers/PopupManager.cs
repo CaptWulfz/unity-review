@@ -9,9 +9,22 @@ public class PopupManager : Singleton<PopupManager>
 
     private const string POPUPS_PATH = "Prefabs/UI/{0}";
 
+    private bool isDone = false;
+    public bool IsDone
+    {
+        get { return this.isDone; }
+    }
+
     public void Initialize()
     {
         this.popupCanvas = GameObject.FindGameObjectWithTag(TagNames.POPUP_CANVAS).GetComponent<Canvas>();
+        StartCoroutine(WaitForInitialization());
+    }
+
+    private IEnumerator WaitForInitialization()
+    {
+        yield return new WaitUntil(() => { return this.popupCanvas != null; });
+        this.isDone = true;
     }
 
     public T ShowPopup<T>(string popupName)

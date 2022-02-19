@@ -6,8 +6,6 @@ using UnityEngine.InputSystem;
 
 public class Player : Entity
 {
-    [SerializeField] string sourceId;
-
     [SerializeField] float health = 100f;
 
     // onEnable = Checkbox in Object
@@ -26,16 +24,59 @@ public class Player : Entity
 
     protected override void Start()
     {
+        base.Start();
         this.sourceName = string.Format("Player1Source@{0}", Guid.NewGuid());
-        this.sourceId = this.sourceName;
         onEnable();
         this.speed = 5f;
-        base.Start();   
     }
 
-    protected override void MoveByRigidBody()
+    protected override void Update()
     {
-        base.MoveByRigidBody();
+        base.Update();
+        PlayerMovementAction();
+
+        if (Keyboard.current.oKey.wasReleasedThisFrame)
+        {
+            LoadingOverlay.Instance.ShowOverlay("Loading");
+        }
+
+        if (Keyboard.current.pKey.wasReleasedThisFrame)
+        {
+            LoadingOverlay.Instance.HideOverlay();
+        }
+    }
+
+    private void PlayerMovementAction()
+    {
+        Vector2 move = this.rb.velocity;
+        move.x = this.controls.Player.Movement.ReadValue<Vector2>().x * speed;
+        move.y = PlayerJumpAction(this.rb.velocity.y);
+
+        if (this.controls.Player.Jump.WasPressedThisFrame())
+        {
+            move.y = jumpVelocity;
+            //this.rb.velocity = Vector2.up * jumpVelocity;
+            Debug.Log("JUMP");
+        }
+        MoveByRigidBody(move);
+    }
+
+    private float PlayerJumpAction(float defaultJump)
+    {
+        float jumpMovement = defaultJump;
+        if(this.controls.Player.Jump.WasPressedThisFrame())
+        {
+            jumpMovement = jumpVelocity;
+        }
+        return jumpMovement;
+        //AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.JUMP);
+
+    }
+
+    protected override void MoveByRigidBody(Vector2 move)
+    {
+        base.MoveByRigidBody(move);
+        //PlayerJumpAction(move);
 
         PlatformerMoveAnimation();
 
@@ -46,6 +87,7 @@ public class Player : Entity
 
     }
 
+    #region Animations
     private void FreeMoveAnimation()
     {
         // for free movement up, down, left, right
@@ -59,10 +101,12 @@ public class Player : Entity
         this.animator.SetFloat("Speed", Mathf.Abs(this.rb.velocity.x));
     }
 
-    private void Update()
+    private void PlatformerJumpAnimation()
     {
-        base.Update();
+
     }
+    #endregion
+
 
 
     private void DamagePlayer()
@@ -101,16 +145,6 @@ public class Player : Entity
 
     private void JumpPlayer()
     {
-        if (Keyboard.current.mKey.isPressed)
-        {
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.JUMP);
-            Debug.Log("HEAL HEALTH");
-        }
-
-        if (Keyboard.current.lKey.wasReleasedThisFrame)
-        {
-
-        }
 
         if (Keyboard.current.mKey.wasReleasedThisFrame)
         {

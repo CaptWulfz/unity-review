@@ -17,35 +17,32 @@ public class Entity : MonoBehaviour
     protected string sourceName = "";
     protected float speed = 5f;
     
-    
-    Controls controls;
+    protected Controls controls;
+
+    #region for jumping purposes
+    protected float jumpVelocity = 10f;
+    protected Transform groundPoint;
+    protected LayerMask whatIsGround;
+    protected bool isGrounded;
+    #endregion
 
     protected virtual void Start()
     {
-        this.controls = new Controls();
+        this.controls = InputManager.Instance.GetControls;
+        //this.controls = new Controls();
         this.controls.Player.Enable();
     }
     protected virtual void Update()
     {
-        MoveByRigidBody();
+        //MoveByRigidBody();
+        //isGrounded = Physics2D.OverlapCircle(groundPoint.position, 2f, whatIsGround);
+
     }
 
-    protected virtual void MoveByRigidBody()
+    protected virtual void MoveByRigidBody(Vector2 move)
     {
-        // Read Value 
-        // <> is for type
-        Vector2 move = this.controls.Player.Movement.ReadValue<Vector2>();
-        if (move == Vector2.up)
-        {
-            // Jump
+        this.rb.velocity = move;
 
-        }
-
-        if (move == Vector2.left || move == Vector2.right)
-        {
-            this.rb.velocity = move * speed;
-            Debug.Log("Moving through" + move);
-        }
     }
 
     protected void MoveByTransform()

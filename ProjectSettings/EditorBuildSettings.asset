@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/StartupScene.unity
     guid: 09283cac3c51ee24db92e4761c291f5e
   - enabled: 1
-    path: Assets/Scenes/MovementAndCollisionScene.unity
-    guid: 353f7812c692d714e8f0bc4211c51d0c
+    path: Assets/Scenes/Scene1.unity
+    guid: fdf4957198fd2e741adbe40c6869b216
   m_configObjects: {}
