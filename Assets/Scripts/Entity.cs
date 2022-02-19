@@ -21,7 +21,7 @@ public class Entity : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        
+        this.controls = InputManager.Instance.GetControls;
     }
 
     // Update is called once per frame

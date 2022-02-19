@@ -22,15 +22,25 @@ public class Player : Entity
 
     protected override void Start()
     {
+        base.Start();
         this.sourceName = string.Format("PlayerSource@{0}", Guid.NewGuid());
         OnEnable();
-        this.controls = new Controls();
         this.controls.Player.Enable();
     }
 
     protected override void Update()
     {
         Move();
+
+        if (Keyboard.current.qKey.wasReleasedThisFrame)
+        {
+            LoadingOverlay.Instance.ShowOverlay("Loading");
+        }
+
+        if (Keyboard.current.wKey.wasReleasedThisFrame)
+        {
+            LoadingOverlay.Instance.HideOverlay();
+        }
     }
 
     private void Move()

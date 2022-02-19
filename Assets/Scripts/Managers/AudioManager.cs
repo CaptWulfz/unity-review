@@ -15,6 +15,12 @@ public class AudioManager : Singleton<AudioManager>
     private Dictionary<string, AudioClip> sfxClips;
     private Dictionary<string, AudioClip> musicClips;
 
+    private bool isDone = false;
+    public bool IsDone
+    {
+        get { return this.isDone; }
+    }
+
     public void Awake()
     {
         Initialize();
@@ -55,6 +61,8 @@ public class AudioManager : Singleton<AudioManager>
         {
             this.musicClips.Add(entry.key, entry.source);
         }
+
+        this.isDone = true;
     }
     #endregion
 
