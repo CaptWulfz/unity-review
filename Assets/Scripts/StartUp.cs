@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StartUp : MonoBehaviour
 {
 
     [SerializeField] SplashScreen splashScreen;
+    [SerializeField] Camera cam;
 
     private void Start()
     {
@@ -35,6 +37,10 @@ public class StartUp : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
         this.splashScreen.Hide();
+
+        this.cam.transform.SetParent(null);
+        SceneManager.MoveGameObjectToScene(this.cam.gameObject, SceneManager.GetActiveScene());
+        //SceneManager.MoveGameObjectToScene(this.cam.gameObject, SceneManager.GetSceneByName("Scene1"));
 
 
     }

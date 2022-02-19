@@ -7,6 +7,9 @@ using UnityEngine.InputSystem;
 public class Player : Entity
 {
     [SerializeField] float health = 100f;
+    [SerializeField] Camera cam;
+
+    //[SerializeField] GameObject player;
 
     // onEnable = Checkbox in Object
     private void onEnable()
@@ -34,6 +37,12 @@ public class Player : Entity
     {
         base.Update();
         PlayerMovementAction();
+
+
+        // Player parent and camera child
+        this.cam = GameObject.FindGameObjectWithTag(TagNames.MAIN_CAMERA).GetComponent<Camera>();
+        this.cam.gameObject.transform.SetParent(this.gameObject.transform);
+        // Player parent and camera child
 
         if (Keyboard.current.oKey.wasReleasedThisFrame)
         {
