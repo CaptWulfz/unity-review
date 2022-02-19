@@ -22,4 +22,9 @@ public class PopupManager : Singleton<PopupManager>
 
         return deploy.GetComponent<T>();
     }
+
+    public void HidePopup(GameObject popup)
+    {
+        Destroy(popup);
+    }
 }

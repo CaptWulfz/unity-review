@@ -6,8 +6,6 @@ using UnityEngine.InputSystem;
 
 public class Player : Entity
 {
-    [SerializeField] string sourceId;
-
     [SerializeField] float health = 100f;
 
     private void OnEnable()
@@ -25,45 +23,80 @@ public class Player : Entity
     protected override void Start()
     {
         this.sourceName = string.Format("PlayerSource@{0}", Guid.NewGuid());
-        this.sourceId = this.sourceName;
         OnEnable();
-        this.speed = 10f;
-        base.Start();
+        this.controls = new Controls();
+        this.controls.Player.Enable();
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (Keyboard.current.aKey.wasReleasedThisFrame)
-        {
-            Parameters param = new Parameters();
-            this.health -= 10f;
-            param.AddParameter<float>("newHealthValue", this.health);
-            param.AddParameter<string>("thoughts", "Shit");
-            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
-            
-            if (this.health <= 0)
-            {
-                Parameters param2 = new Parameters();
-                param2.AddParameter<string>("deathText", "You have Died!");
+        Move();
+    }
 
-                EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
-            }
-            //AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.TOM);
-        }
+    private void Move()
+    {
+        Vector2 move = this.rb.velocity;
+        move.x = this.controls.Player.Movement.ReadValue<Vector2>().x;
+        move.y = TryJump(this.rb.velocity.y);
 
-        if (Keyboard.current.sKey.isPressed)
-        {
-            AudioManager.Instance.PlayAudio(AudioKeys.SFX, this.sourceName, SFXKeys.NANI);
-        }
+        MoveByRigidBody(move);
+    }
 
-        if (Keyboard.current.dKey.wasReleasedThisFrame)
+    private float TryJump(float defaultMov)
+    {
+        float yMov = defaultMov;
+        //if (jump)
+        //   yMov = 10f;
+
+        return yMov;
+    }
+
+    protected override void MoveByRigidBody(Vector2 move)
+    {
+        base.MoveByRigidBody(move * speed);
+
+        FreeMoveAnimation();
+
+        if (this.rb.velocity.x < 0)
+            this.spriteRenderer.flipX = true;
+        else if (this.rb.velocity.x > 0)
+            this.spriteRenderer.flipX = false;
+    }
+
+    private void FreeMoveAnimation()
+    {
+        float speedParam = Mathf.Abs(this.rb.velocity.x + this.rb.velocity.y);
+        this.animator.SetFloat("Speed", speedParam);
+    }
+
+    private void PlatformerMoveAnimation()
+    {
+        this.animator.SetFloat("Speed", Mathf.Abs(this.rb.velocity.x));
+    }
+
+    private void DamagePlayer()
+    {
+        Parameters param = new Parameters();
+        this.health -= 10f;
+        param.AddParameter<float>("newHealthValue", this.health);
+        param.AddParameter<string>("thoughts", "Shit");
+        EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
+
+        if (this.health <= 0)
         {
-            Parameters param = new Parameters();
-            this.health += 10f;
-            param.AddParameter<float>("newHealthValue", this.health);
-            param.AddParameter<string>("thoughts", "I'm alive");
-            EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
-            //AudioManager.Instance.PlayAudio(AudioKeys.MUSIC, this.sourceName, MusicKeys.CHILL);
+            Parameters param2 = new Parameters();
+            param2.AddParameter<string>("deathText", "You have Died!");
+
+            EventBroadcaster.Instance.PostEvent(EventNames.ON_PLAYER_DIED, param2);
         }
+    }
+
+    private void HealPlayer()
+    {
+        Parameters param = new Parameters();
+        this.health += 10f;
+        param.AddParameter<float>("newHealthValue", this.health);
+        param.AddParameter<string>("thoughts", "I'm alive");
+        EventBroadcaster.Instance.PostEvent(EventNames.ON_HEALTH_MODIFIED, param);
     }
 }
