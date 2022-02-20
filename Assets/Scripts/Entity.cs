@@ -21,15 +21,11 @@ public class Entity : MonoBehaviour
 
     #region for jumping purposes
     protected float jumpVelocity = 10f;
-    protected Transform groundPoint;
-    protected LayerMask whatIsGround;
-    protected bool isGrounded;
     #endregion
 
     protected virtual void Start()
     {
         this.controls = InputManager.Instance.GetControls;
-        //this.controls = new Controls();
         this.controls.Player.Enable();
     }
     protected virtual void Update()
@@ -45,33 +41,35 @@ public class Entity : MonoBehaviour
 
     }
 
-    protected void MoveByTransform()
-    {
-        Vector2 move = this.transform.position;
-        // Input.GetKeyUp(KeyCode.A)
-        // Moving Left
-        // deltaTime is based when
-        if (Keyboard.current.aKey.isPressed)
-        {
-            move = new Vector2(this.transform.position.x - speed * Time.deltaTime, this.transform.position.y);
-            Debug.Log("GOING LEFT");
-        }
-        if (Keyboard.current.dKey.isPressed)
-        {
-            move = new Vector2(this.transform.position.x + speed * Time.deltaTime, this.transform.position.y);
-            Debug.Log("GOING RIGHT");
-        }
-        if (Keyboard.current.wKey.isPressed)
-        {
-            move = new Vector2(this.transform.position.x, this.transform.position.y + speed * Time.deltaTime);
-            Debug.Log("GOING UP");
-        }
-        if (Keyboard.current.sKey.isPressed)
-        {
-            move = new Vector2(this.transform.position.x, this.transform.position.y - speed * Time.deltaTime);
-            Debug.Log("GOING DOWN");
-        }
+    #region Move by Transform (Keyboard)
+    //protected void MoveByTransform()
+    //{
+    //    Vector2 move = this.transform.position;
+    //    // Input.GetKeyUp(KeyCode.A)
+    //    // Moving Left
+    //    // deltaTime is based when
+    //    if (Keyboard.current.aKey.isPressed)
+    //    {
+    //        move = new Vector2(this.transform.position.x - speed * Time.deltaTime, this.transform.position.y);
+    //        Debug.Log("GOING LEFT");
+    //    }
+    //    if (Keyboard.current.dKey.isPressed)
+    //    {
+    //        move = new Vector2(this.transform.position.x + speed * Time.deltaTime, this.transform.position.y);
+    //        Debug.Log("GOING RIGHT");
+    //    }
+    //    if (Keyboard.current.wKey.isPressed)
+    //    {
+    //        move = new Vector2(this.transform.position.x, this.transform.position.y + speed * Time.deltaTime);
+    //        Debug.Log("GOING UP");
+    //    }
+    //    if (Keyboard.current.sKey.isPressed)
+    //    {
+    //        move = new Vector2(this.transform.position.x, this.transform.position.y - speed * Time.deltaTime);
+    //        Debug.Log("GOING DOWN");
+    //    }
 
-        this.transform.position = move;
-    }
+    //    this.transform.position = move;
+    //}
+    #endregion
 }
